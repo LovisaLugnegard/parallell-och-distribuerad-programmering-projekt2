@@ -23,12 +23,14 @@ int main(int argc, char *argv[])
 
   MPI_Init(&argc,&argv);
 
-  int Nx,Ny,Nt,n_local_rows,n_local_columns,i,j,halo_size,u_size_local,blocklength,stride,count,bonk2;
+  int n,Nx,Ny,Nt,n_local_rows,n_local_columns,i,j,halo_size,u_size_local,blocklength,stride,count,bonk2;
   double dt, dx, lambda_sq;
   double *u; //,*u_local;
   double *u_old, *u_old_local;
   double *u_new,*u_new_local;
   double begin,end;
+  int source, dest;
+  MPI_Datatype halo_row, halo_col;
 
 
   Nx=8; //ändrade till 8 för att kunna se vad som händer, är 128 i koden från uppgiften
@@ -36,6 +38,7 @@ int main(int argc, char *argv[])
     Nx=atoi(argv[1]);
   Ny=Nx;
   Nt=Nx;
+  n = Nx;
   dx=1.0/(Nx-1);
   dt=0.50*dx;
   lambda_sq = (dt/dx)*(dt/dx);
@@ -70,7 +73,7 @@ int main(int argc, char *argv[])
 
   n_local_rows = Ny/nprocs+1;
   n_local_columns = Nx/nprocs+1;
-  u_size_local = (n_local_columns)*(n_local_rows);
+  u_size_local = (n_local_columns)*(n_local_rows); //tillräckligt stor för halo
   halo_size = n_local_rows + n_local_columns -1;
 
 
@@ -144,10 +147,73 @@ int main(int argc, char *argv[])
    
     printf("proc: %d  %g\n",rank,u_local[i]);
 
-  MPI_Finalize();
 
   //nu är alla u_local uppdaterade, nu behöver vi skicka halopunkter, här tror jag att det är en bra idé att använda sendrecv kolonn och radvis
+  //y-led
 
+  printf("row_rank: %d col_rank: %d rank: %d \n", row_rank, col_rank, rank);
+  MPI_Barrier(proc_grid);
+  for(i=1; i <= 15;i++){
+    u_local[i-1]=i;
+    // printf("%d",i);
+}
+  for(i=0; i < 15;i++){
+
+    printf(" %d ",u_local[i]);
+}  
+
+  MPI_Type_vector(1,n/sqnprocs,n/sqnprocs,MPI_DOUBLE,&halo_row);
+  MPI_Type_commit(&halo_row);
+  MPI_Type_vector(n/sqnprocs,1,n/sqnprocs,MPI_DOUBLE,&halo_col);
+  MPI_Type_commit(&halo_col);
+
+  //HALOROWTEST
+  double halo_data_upper[n/sqnprocs];
+  double halo_data_lower[n/sqnprocs];
+  double halo_data_left[n/sqnprocs];
+  double halo_data_right[n/sqnprocs];
+
+
+  MPI_Cart_shift(proc_grid, 0, 1, &source, &dest);
+  printf( "rank: %d source: %d dest %d\n",rank,source, dest);
+  if(dest != MPI_PROC_NULL){
+    MPI_Sendrecv(&u_local[n*n/nprocs - n/sqnprocs],1,halo_row,dest,1,halo_data_lower, n/sqnprocs,MPI_DOUBLE,source,2,proc_grid,&status[rank]);
+    printf("I SENDRECIEVED %d \n",rank);
+}
+
+  MPI_Barrier(proc_grid);
+
+  MPI_Cart_shift(proc_grid, 0, -1, &source, &dest);
+  if(dest != MPI_PROC_NULL){
+    MPI_Sendrecv(&u_local[0],1,halo_row,dest,2,halo_data_upper, n/sqnprocs,MPI_DOUBLE,source,1,proc_grid,&status[rank]);
+    printf("I SENDRECIEVED %d \n",rank);
+    for (i=0;i<n/sqnprocs;i++)
+      printf("Halodata upper: %d  %g\n",rank,halo_data_upper[i]);
+}
+  MPI_Barrier(proc_grid);
+  MPI_Cart_shift(proc_grid, 1, 1, &source, &dest);
+  printf( "rank: %d source: %d dest %d\n",rank,source, dest);
+  if(dest != MPI_PROC_NULL){
+    MPI_Sendrecv(&u_local[n/sqnprocs-1],1,halo_col,dest,3,halo_data_right, n/sqnprocs,MPI_DOUBLE,source,4,proc_grid,&status[rank]);
+    printf("I SENDRECIEVED %d \n",rank);
+}
+  MPI_Barrier(proc_grid);
+  MPI_Cart_shift(proc_grid, 1, -1, &source, &dest);
+  if(dest != MPI_PROC_NULL){
+    MPI_Sendrecv(&u_local[0],1,halo_col,dest,4,halo_data_left, n/sqnprocs,MPI_DOUBLE,source,3,proc_grid,&status[rank]);
+    printf("I SENDRECIEVED %d \n",rank);
+}
+  MPI_Barrier(proc_grid);
+    for (i=0;i<n/sqnprocs;i++)
+      printf("Halodata left: %d  %g\n",rank,halo_data_left[i]);
+
+  // MPI_Sendrecv(
+  MPI_Finalize();
+  /* MPI_Sendrecv(const void *sendbuf, int sendcount, MPI_Datatype sendtype, */
+  /*              int dest, int sendtag, */
+  /*              void *recvbuf, int recvcount, MPI_Datatype recvtype, */
+  /*              int source, int recvtag, */
+  /*              MPI_Comm comm, MPI_Status *status) */
 
   //bortkommenterat bara för att slippa hålla på med det just nu
 
