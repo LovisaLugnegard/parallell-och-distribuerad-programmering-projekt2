@@ -10,7 +10,7 @@
 #include <sys/time.h>
 #include <mpi.h>
 
-#define WRITE_TO_FILE */
+//#define WRITE_TO_FILE */
 /* #define VERIFY */
 
 double timer();
@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
   int n,Nx,Ny,Nt,n_local_rows,n_local_columns,i,j,halo_size,u_size_local,blocklength,stride,count,bonk2;
   double dt, dx, lambda_sq;
   double *u; //,*u_local;
-  double *u_old, *u_old_local;
-  double *u_new,*u_new_local;
+  double *u_old;//, *u_old_local;
+  double *u_new;//,*u_new_local;
   double begin,end;
   int source, dest;
   MPI_Datatype halo_row, halo_col;
@@ -77,11 +77,12 @@ int main(int argc, char *argv[])
   halo_size = n_local_rows + n_local_columns -1;
 
 
-  u_old_local = malloc((u_size_local)*sizeof(double));
-  u_new_local = malloc((u_size_local)*sizeof(double));
+  //u_old_local = malloc((u_size_local)*sizeof(double));
+  //u_new_local = malloc((u_size_local)*sizeof(double));
 
   double u_local[u_size_local];
-
+  double u_old_local[u_size_local];
+  double u_new_local[u_size_local];
 
   /* Setup IC */
   memset(u_local,0,u_size_local*sizeof(double));
@@ -121,6 +122,7 @@ int main(int argc, char *argv[])
     MPI_Type_vector(count,blocklength,stride,MPI_DOUBLE,&strided);  
     MPI_Type_commit(&strided);
 
+ 
 
     //distribute all grid partitions
     for(i=0; i<sqnprocs; i++) { 
@@ -143,24 +145,24 @@ int main(int argc, char *argv[])
 
   MPI_Get_elements(&status[rank],MPI_DOUBLE,&bonk2);
   printf("proc %d recv %d elements of type MPI_DOUBLE\n",rank,bonk2);
-  for (i=0;i<bonk2;i++)
-   
+  for (i=0;i<bonk2;i++) 
     printf("proc: %d  %g\n",rank,u_local[i]);
 
 
   //nu är alla u_local uppdaterade, nu behöver vi skicka halopunkter, här tror jag att det är en bra idé att använda sendrecv kolonn och radvis
   //y-led
-
+  //memcpy(u_local,(double[25]){1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,0,0,0,0,0,0,0,0,0,0,0},sizeof(double[25]));
   printf("row_rank: %d col_rank: %d rank: %d \n", row_rank, col_rank, rank);
   MPI_Barrier(proc_grid);
-  for(i=1; i <= 15;i++){
-    u_local[i-1]=i;
-    // printf("%d",i);
-}
-  for(i=0; i < 15;i++){
+  for(i = 1; i<= 16; i++){
+    u_local[i-1] = i*1.0;
+   
+  }
 
-    printf(" %d ",u_local[i]);
-}  
+
+  for(i=0; i < 16;i++){
+    printf(" %g ",u_local[i]);
+  }  
 
   MPI_Type_vector(1,n/sqnprocs,n/sqnprocs,MPI_DOUBLE,&halo_row);
   MPI_Type_commit(&halo_row);
@@ -177,30 +179,30 @@ int main(int argc, char *argv[])
   MPI_Cart_shift(proc_grid, 0, 1, &source, &dest);
   printf( "rank: %d source: %d dest %d\n",rank,source, dest);
   if(dest != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[n*n/nprocs - n/sqnprocs],1,halo_row,dest,1,halo_data_lower, n/sqnprocs,MPI_DOUBLE,source,2,proc_grid,&status[rank]);
-    printf("I SENDRECIEVED %d \n",rank);
-}
+    MPI_Sendrecv(&u_local[n*n/nprocs - n/sqnprocs],1,halo_row,dest,10,halo_data_lower, n/sqnprocs,MPI_DOUBLE,dest,20,proc_grid,&status[rank]);
+    printf("I, %d, sent lower halo data to %d \n",rank,dest);
+  }
 
-  MPI_Barrier(proc_grid);
+  // MPI_Barrier(proc_grid);
 
   MPI_Cart_shift(proc_grid, 0, -1, &source, &dest);
   if(dest != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[0],1,halo_row,dest,2,halo_data_upper, n/sqnprocs,MPI_DOUBLE,source,1,proc_grid,&status[rank]);
+    MPI_Sendrecv(&u_local[0],1,halo_row,dest,20,halo_data_upper, n/sqnprocs,MPI_DOUBLE,dest,10,proc_grid,&status[rank]);
     printf("I SENDRECIEVED %d \n",rank);
     for (i=0;i<n/sqnprocs;i++)
       printf("Halodata upper: %d  %g\n",rank,halo_data_upper[i]);
-}
-  MPI_Barrier(proc_grid);
+  }
+  // MPI_Barrier(proc_grid);
   MPI_Cart_shift(proc_grid, 1, 1, &source, &dest);
   printf( "rank: %d source: %d dest %d\n",rank,source, dest);
   if(dest != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[n/sqnprocs-1],1,halo_col,dest,3,halo_data_right, n/sqnprocs,MPI_DOUBLE,source,4,proc_grid,&status[rank]);
+    MPI_Sendrecv(&u_local[n/sqnprocs-1],1,halo_col,dest,30,halo_data_right, n/sqnprocs,MPI_DOUBLE,dest,40,proc_grid,&status[rank]);
     printf("I SENDRECIEVED %d \n",rank);
 }
-  MPI_Barrier(proc_grid);
+  // MPI_Barrier(proc_grid);
   MPI_Cart_shift(proc_grid, 1, -1, &source, &dest);
   if(dest != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[0],1,halo_col,dest,4,halo_data_left, n/sqnprocs,MPI_DOUBLE,source,3,proc_grid,&status[rank]);
+    MPI_Sendrecv(&u_local[0],1,halo_col,dest,40,halo_data_left, n/sqnprocs,MPI_DOUBLE,dest,30,proc_grid,&status[rank]);
     printf("I SENDRECIEVED %d \n",rank);
 }
   MPI_Barrier(proc_grid);
@@ -219,63 +221,75 @@ int main(int argc, char *argv[])
 
   /* /\* Integrate *\/ */
 
-  /*   begin=timer(); */
-  /*   for(int n=2; n<Nt; ++n) { */
+   begin=timer(); 
+   for(int n=2; n<Nt; ++n) { 
   /*     /\* Swap ptrs *\/ */
-  /*     double *tmp = u_old; */
-  /*     u_old = u; */
-  /*     u = u_new; */
-  /*     u_new = tmp; */
+     double tmp[sizeof(u_local)];
+     memcpy(tmp,u_old_local,sizeof(u_local));
+     memcpy(u_old_local,u_local,sizeof(u_local));
+     memcpy(u_local,u_new_local,sizeof(u_local));
+     memcpy(u_new_local,tmp,sizeof(u_local)); 
+     // u_old_local = u_local; 
+     //u_local = u_new_local; 
+     //u_new_local = tmp; 
 
   /*     /\* Apply stencil *\/ */
-  /*     for(int i = 1; i < (Ny-1); ++i) { */
-  /*       for(int j = 1; j < (Nx-1); ++j) { */
+       for(int i = 1; i < (n/sqnprocs-1); ++i) { 
+         for(int j = 1; j < (n/sqnprocs-1); ++j) { 
 
-  /*         u_new[i*Nx+j] = 2*u[i*Nx+j]-u_old[i*Nx+j]+lambda_sq* */
-  /*           (u[(i+1)*Nx+j] + u[(i-1)*Nx+j] + u[i*Nx+j+1] + u[i*Nx+j-1] -4*u[i*Nx+j]); */
-  /*       } */
-  /*     } */
+           u_new_local[i*n/sqnprocs+j] = 2*u_local[i*n/sqnprocs+j]-u_old_local[i*n/sqnprocs+j]+lambda_sq* 
+             (u_local[(i+1)*n/sqnprocs+j] + u_local[(i-1)*n/sqnprocs+j] + u_local[i*n/sqnprocs+j+1] + u_local[i*n/sqnprocs+j-1] -4*u_local[i*n/sqnprocs+j]); 
+         } 
+       }
+       //Do manual computation of EOL etc
+       //How do we know i there is an upper/lower/right/left process?
 
-  /* #ifdef VERIFY */
-  /*     double error=0.0; */
-  /*     for(int i = 0; i < Ny; ++i) { */
-  /*       for(int j = 0; j < Nx; ++j) { */
-  /*         double e = fabs(u_new[i*Nx+j]-initialize(j*dx,i*dx,n*dt)); */
-  /*         if(e>error) */
-  /*           error = e; */
-  /*       } */
-  /*     } */
-  /*     if(error > max_error) */
-  /*       max_error=error; */
-  /* #endif */
+       // Gather data in process 0 here!!
 
-  /* #ifdef WRITE_TO_FILE */
-  /*     save_solution(u_new,Ny,Nx,n); */
-  /* #endif */
 
-  /*   } */
-  /*   end=timer(); */
 
-  /*   printf("Time elapsed: %g s\n",(end-begin)); */
 
-  /* #ifdef VERIFY */
-  /*   printf("Maximum error: %g\n",max_error); */
-  /* #endif */
+   #ifdef VERIFY 
+       double error=0.0; 
+       for(int i = 0; i < Ny; ++i) { 
+         for(int j = 0; j < Nx; ++j) { 
+           double e = fabs(u_new_local[i*Nx+j]-initialize(j*dx,i*dx,n*dt)); 
+           if(e>error) 
+             error = e; 
+         } 
+       } 
+       if(error > max_error) 
+         max_error=error; 
+   #endif 
 
-  /*   free(u); */
-  /*   free(u_old); */
-  /*   free(u_new); */
+   #ifdef WRITE_TO_FILE 
+       save_solution(u_new,Ny,Nx,n); 
+   #endif 
 
-  /*   return 0; */
+     } 
+     end=timer(); 
+
+     printf("Time elapsed: %g s\n",(end-begin)); 
+
+   #ifdef VERIFY 
+     printf("Maximum error: %g\n",max_error); 
+   #endif 
+
+     free(u); 
+     free(u_old); 
+     free(u_new); 
+    
+   
+     return 0; 
 } 
 
-/* double timer() */
-/* { */
-/*   struct timeval tv; */
-/*   gettimeofday(&tv, NULL); */
-/*   double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000; */
-/*   return seconds; */
-/* } */
+ double timer() 
+ { 
+   struct timeval tv; 
+   gettimeofday(&tv, NULL); 
+   double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000; 
+   return seconds; 
+ } 
 
 double initialize(double x, double y, double t)
 {
