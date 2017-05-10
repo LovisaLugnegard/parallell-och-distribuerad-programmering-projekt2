@@ -130,10 +130,10 @@ int main(int argc, char *argv[])
  
 
     //distribute all grid partitions
-    for(i=0; i<sqnprocs; i++) { 
-      for(j=0; j<sqnprocs; j++){
+    for(i=0; i<nproc_row; i++) {//process rows 
+      for(j=0; j<nproc_col; j++){//process columns
         MPI_Cart_rank(proc_grid,coords,&rank);
-        MPI_Isend(&u_new[(Nx*Nx/nprocs)*2*i+Nx/sqnprocs*j],1,strided,(j+i*sqnprocs),1,MPI_COMM_WORLD,&request[i*sqnprocs+j]);
+        MPI_Isend(&u_new[j*Nx/nproc_col + i*Nx*Ny/nproc_row],1,strided,(j+i*nproc_col),1,MPI_COMM_WORLD,&request[j+i*nproc_col]);//[(Nx*Nx/nprocs)*2*i+Nx/sqnprocs*j],1,strided,(j+i*sqnprocs),1,MPI_COMM_WORLD,&request[i*sqnprocs+j]);
       }
     } 
   }
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
   printf("\n after barrier \n");
 
 
-  MPI_Recv(u_local,Nx*Nx/nprocs,MPI_DOUBLE,0,1,MPI_COMM_WORLD,&status[rank]);
+  MPI_Recv(u_local,Nx*Ny/nprocs,MPI_DOUBLE,0,1,MPI_COMM_WORLD,&status[rank]);
 
   MPI_Barrier(proc_grid);
 
@@ -157,32 +157,32 @@ int main(int argc, char *argv[])
   //memcpy(u_local,(double[25]){1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,0,0,0,0,0,0,0,0,0,0,0},sizeof(double[25]));
   printf("row_rank: %d col_rank: %d rank: %d \n", row_rank, col_rank, rank);
   MPI_Barrier(proc_grid);
-  for(i = 1; i<= 16; i++){
-    u_local[i-1] = i*1.0;
+  //for(i = 1; i<= 16; i++){
+  //  u_local[i-1] = i*1.0;
    
-  }
+  //}
 
 
   // for(i=0; i < 16;i++){
   //  printf(" %g ",u_local[i]);
   //}  
 
-  MPI_Type_vector(1,n/sqnprocs,n/sqnprocs,MPI_DOUBLE,&halo_row);
+  MPI_Type_vector(1,Nx/nproc_col,Nx/nproc_col,MPI_DOUBLE,&halo_row);
   MPI_Type_commit(&halo_row);
-  MPI_Type_vector(n/sqnprocs,1,n/sqnprocs,MPI_DOUBLE,&halo_col);
+  MPI_Type_vector(Ny/nproc_row,1,Ny/nproc_row,MPI_DOUBLE,&halo_col);
   MPI_Type_commit(&halo_col);
 
-  //HALOROWTEST
-  double halo_data_upper[n/sqnprocs];
-  double halo_data_lower[n/sqnprocs];
-  double halo_data_left[n/sqnprocs];
-  double halo_data_right[n/sqnprocs];
+  //HALO ROW TEST
+  double halo_data_upper[Nx/nproc_col];
+  double halo_data_lower[Nx/nproc_col];
+  double halo_data_left[Ny/nproc_row];
+  double halo_data_right[Ny/nproc_row];
 
 
   MPI_Cart_shift(proc_grid, 0, 1, &source, &dest1);
   // printf( "rank: %d source: %d dest %d\n",rank,source, dest1);
   if(dest1 != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[n*n/nprocs - n/sqnprocs],1,halo_row,dest1,10,halo_data_lower, n/sqnprocs,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]);
+    MPI_Sendrecv(&u_local[Nx*Ny/nprocs - Nx/nproc_col],1,halo_row,dest1,10,halo_data_lower, Nx/nproc_col,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]);
     // printf("I, %d, sent lower halo data to %d \n",rank,dest1);
   }
 
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 
   MPI_Cart_shift(proc_grid, 0, -1, &source, &dest2);
   if(dest2 != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[0],1,halo_row,dest2,20,halo_data_upper, n/sqnprocs,MPI_DOUBLE,dest2,10,proc_grid,&status[rank]);
+    MPI_Sendrecv(&u_local[0],1,halo_row,dest2,20,halo_data_upper, Nx/nproc_col,MPI_DOUBLE,dest2,10,proc_grid,&status[rank]);
     // printf("I SENDRECIEVED %d \n",rank);
     // for (i=0;i<n/sqnprocs;i++)
       //  printf("Halodata upper: %d  %g\n",rank,halo_data_upper[i]);
@@ -199,13 +199,14 @@ int main(int argc, char *argv[])
   MPI_Cart_shift(proc_grid, 1, 1, &source, &dest3);
   // printf( "rank: %d source: %d dest %d\n",rank,source, dest3);
   if(dest3 != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[n/sqnprocs-1],1,halo_col,dest3,30,halo_data_right, n/sqnprocs,MPI_DOUBLE,dest3,40,proc_grid,&status[rank]);
+    MPI_Sendrecv(&u_local[Nx/nproc_col-1],1,halo_col,dest3,30,halo_data_right, Ny/nproc_row,MPI_DOUBLE,dest3,40,proc_grid,&status[rank]);
     // printf("I SENDRECIEVED %d \n",rank);
   }
   // MPI_Barrier(proc_grid);
+
   MPI_Cart_shift(proc_grid, 1, -1, &source, &dest4);
   if(dest4 != MPI_PROC_NULL){
-    MPI_Sendrecv(&u_local[0],1,halo_col,dest4,40,halo_data_left, n/sqnprocs,MPI_DOUBLE,dest4,30,proc_grid,&status[rank]);
+    MPI_Sendrecv(&u_local[0],1,halo_col,dest4,40,halo_data_left, Ny/nproc_row,MPI_DOUBLE,dest4,30,proc_grid,&status[rank]);
     // printf("I SENDRECIEVED %d \n",rank);
   }
   MPI_Barrier(proc_grid);
@@ -219,7 +220,6 @@ int main(int argc, char *argv[])
   /*              int source, int recvtag, */
   /*              MPI_Comm comm, MPI_Status *status) */
 
-  MPI_Barrier(proc_grid);
 
   /* /\* Integrate *\/ */
 
@@ -238,11 +238,11 @@ int main(int argc, char *argv[])
 
 
     /*     /\* Apply stencil *\/ */
-    for(int i = 1; i < (n/sqnprocs-1); ++i) { 
-      for(int j = 1; j < (n/sqnprocs-1); ++j) { 
+    for(int i = 1; i < (Ny/nproc_row-1); ++i) {//Rows 
+      for(int j = 1; j < (Nx/nproc_col-1); ++j) { //Columns
 
-        u_new_local[i*n/sqnprocs+j] = 2*u_local[i*n/sqnprocs+j]-u_old_local[i*n/sqnprocs+j]+lambda_sq* 
-          (u_local[(i+1)*n/sqnprocs+j] + u_local[(i-1)*n/sqnprocs+j] + u_local[i*n/sqnprocs+j+1] + u_local[i*n/sqnprocs+j-1] -4*u_local[i*n/sqnprocs+j]); 
+        u_new_local[i*n_local_rows+j] = 2*u_local[i*n_local_rows+j]-u_old_local[i*n_local_rows+j]+lambda_sq* 
+          (u_local[(i+1)*n_local_rows+j] + u_local[(i-1)*n_local_rows+j] + u_local[i*n_local_rows+j+1] + u_local[i*n_local_rows+j-1] -4*u_local[i*n_local_rows+j]); 
       } 
     }
     //Do manual computation of EOL etc
@@ -251,10 +251,10 @@ int main(int argc, char *argv[])
       // printf("%d in dest3 not null \n", rank);
       //räkna med halopunkter till höger (obs ej hörnpunkt)
 
-      for(int i = 1; i < (n/sqnprocs-1); ++i) { 
+      for(int i = 1; i < (n_local_rows-1); ++i) { 
 
-        u_new_local[i*n/sqnprocs-1] = 2*u_local[i*n/sqnprocs-1]-u_old_local[i*n/sqnprocs-1]+lambda_sq* 
-          (u_local[(i+1)*n/sqnprocs-1] + u_local[(i-1)*n/sqnprocs-1] +halo_data_right[i] + u_local[i*n/sqnprocs-2] -4*u_local[i*n/sqnprocs-1]); 
+        u_new_local[i*n_local_rows-1] = 2*u_local[i*n_local_rows-1]-u_old_local[i*n_local_rows-1]+lambda_sq* 
+          (u_local[(i+1)*n_local_rows-1] + u_local[(i-1)*n_local_rows-1] +halo_data_right[i] + u_local[i*n_local_rows-2] -4*u_local[i*n_local_rows-1]); 
       } 
        
     }
@@ -263,9 +263,9 @@ int main(int argc, char *argv[])
       //     printf("%d in dest1 not null \n", rank);
       //räkna med halopunkter nedåt  (obs ej hörnpunkt)
 
-      for(int j = 1; j < (n/sqnprocs-1); ++j) { 
-
-        u_new_local[n*n/nprocs- n/sqnprocs + j -1] = 2*u_local[n*n/nprocs- n/sqnprocs + j -1]-u_old_local[n*n/nprocs- n/sqnprocs + j -1]+lambda_sq* 
+      for(int j = 1; j < (n_local_columns-1); ++j) { 
+        //HÄR SLUTADE VI, börjar i nedre vänstra hörnet
+        u_new_local[Nx*Ny/nprocs- n_local_columns + j -1] = 2*u_local[n*n/nprocs- n/sqnprocs + j -1]-u_old_local[n*n/nprocs- n/sqnprocs + j -1]+lambda_sq* 
           (halo_data_lower[j] + u_local[n*n/nprocs-2* n/sqnprocs + j -1] +  u_local[n*n/nprocs- n/sqnprocs + j]  + u_local[n*n/nprocs- n/sqnprocs + j-2] -4*u_local[n*n/nprocs- n/sqnprocs + j -1]); 
       } 
        
