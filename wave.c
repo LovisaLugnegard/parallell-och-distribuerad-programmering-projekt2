@@ -49,16 +49,17 @@ int main(int argc, char *argv[])
   sqnprocs = sqrt(nprocs);
 
   int row_rank,col_rank,n_dims,reorder;
-  int dims[2], coords[2], cyclic[2];
+  int  coords[2], cyclic[2],dims[2];
   MPI_Comm proc_grid,proc_row,proc_col;
   n_dims = 2;
+  
   reorder = 1;
-  dims[0] = sqnprocs;
-  dims[1] = sqnprocs;
+  dims[0] = 0;
+  dims[1] = 0;
   cyclic[0] = 0;
   cyclic[1] = 0;
 
-  
+  MPI_Dims_create(nprocs,n_dims,dims);  
   MPI_Cart_create(MPI_COMM_WORLD,n_dims,dims,cyclic,reorder,&proc_grid);
   MPI_Comm_rank(proc_grid,&rank);
   MPI_Cart_coords(proc_grid,rank,n_dims,coords);
@@ -73,8 +74,10 @@ int main(int argc, char *argv[])
   MPI_Status status[nprocs];
   MPI_Datatype strided;
 
-  n_local_rows = Ny/nprocs;
-  n_local_columns = Nx/nprocs;
+  //Can we use dims create to distribute our gridpoints??
+  //they are now evenly distributed
+  n_local_rows = Ny/nproc_row;//nprocs;
+  n_local_columns = Nx/nproc_col;//nprocs;
   u_size_local = (n_local_columns)*(n_local_rows); //tillräckligt stor för halo
   halo_size = n_local_rows + n_local_columns -1;
 
@@ -82,6 +85,7 @@ int main(int argc, char *argv[])
   //u_old_local = malloc((u_size_local)*sizeof(double));
   //u_new_local = malloc((u_size_local)*sizeof(double));
 
+  double u[Nx*Ny];
   double u_local[u_size_local];
   double u_old_local[u_size_local];
   double u_new_local[u_size_local];
@@ -90,10 +94,9 @@ int main(int argc, char *argv[])
   memset(u_local,0,u_size_local*sizeof(double));
   memset(u_old_local,0,u_size_local*sizeof(double));
   memset(u_new_local,0,u_size_local*sizeof(double));
-  stride=Nx;
-  count=Nx/sqnprocs;
-  blocklength=Nx/sqnprocs;
-  double u[n*n];
+  stride = Nx;
+  count = n_local_rows;// Ny/sqnprocs;
+  blocklength=n_local_columns;//Nx/sqnprocs;
 
   if(rank==0){
     // u = malloc(Nx*Ny*sizeof(double));
@@ -110,7 +113,7 @@ int main(int argc, char *argv[])
 
         /* u1 */
         u_new[i*Nx+j] = initialize(x,y,dt);
-        printf("unew %d",u_new[i*Nx+j]);
+        // printf("unew %d",u_new[i*Nx+j]);
       }
     }
     printf("\n IC complete \n");
@@ -130,8 +133,6 @@ int main(int argc, char *argv[])
     for(i=0; i<sqnprocs; i++) { 
       for(j=0; j<sqnprocs; j++){
         MPI_Cart_rank(proc_grid,coords,&rank);
-        //HÄR VAR VI NÄR VI SLUTADE!!!
-
         MPI_Isend(&u_new[(Nx*Nx/nprocs)*2*i+Nx/sqnprocs*j],1,strided,(j+i*sqnprocs),1,MPI_COMM_WORLD,&request[i*sqnprocs+j]);
       }
     } 
@@ -147,8 +148,8 @@ int main(int argc, char *argv[])
 
   MPI_Get_elements(&status[rank],MPI_DOUBLE,&bonk2);
   printf("proc %d recv %d elements of type MPI_DOUBLE\n",rank,bonk2);
-  for (i=0;i<bonk2;i++) 
-    printf("proc: %d  %g\n",rank,u_local[i]);
+  //for (i=0;i<bonk2;i++) 
+    //  printf("proc: %d  %g\n",rank,u_local[i]);
 
 
   //nu är alla u_local uppdaterade, nu behöver vi skicka halopunkter, här tror jag att det är en bra idé att använda sendrecv kolonn och radvis
@@ -162,9 +163,9 @@ int main(int argc, char *argv[])
   }
 
 
-  for(i=0; i < 16;i++){
-    printf(" %g ",u_local[i]);
-  }  
+  // for(i=0; i < 16;i++){
+  //  printf(" %g ",u_local[i]);
+  //}  
 
   MPI_Type_vector(1,n/sqnprocs,n/sqnprocs,MPI_DOUBLE,&halo_row);
   MPI_Type_commit(&halo_row);
@@ -179,10 +180,10 @@ int main(int argc, char *argv[])
 
 
   MPI_Cart_shift(proc_grid, 0, 1, &source, &dest1);
-  printf( "rank: %d source: %d dest %d\n",rank,source, dest1);
+  // printf( "rank: %d source: %d dest %d\n",rank,source, dest1);
   if(dest1 != MPI_PROC_NULL){
     MPI_Sendrecv(&u_local[n*n/nprocs - n/sqnprocs],1,halo_row,dest1,10,halo_data_lower, n/sqnprocs,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]);
-    printf("I, %d, sent lower halo data to %d \n",rank,dest1);
+    // printf("I, %d, sent lower halo data to %d \n",rank,dest1);
   }
 
   // MPI_Barrier(proc_grid);
@@ -190,39 +191,33 @@ int main(int argc, char *argv[])
   MPI_Cart_shift(proc_grid, 0, -1, &source, &dest2);
   if(dest2 != MPI_PROC_NULL){
     MPI_Sendrecv(&u_local[0],1,halo_row,dest2,20,halo_data_upper, n/sqnprocs,MPI_DOUBLE,dest2,10,proc_grid,&status[rank]);
-    printf("I SENDRECIEVED %d \n",rank);
-    for (i=0;i<n/sqnprocs;i++)
-      printf("Halodata upper: %d  %g\n",rank,halo_data_upper[i]);
+    // printf("I SENDRECIEVED %d \n",rank);
+    // for (i=0;i<n/sqnprocs;i++)
+      //  printf("Halodata upper: %d  %g\n",rank,halo_data_upper[i]);
   }
   // MPI_Barrier(proc_grid);
   MPI_Cart_shift(proc_grid, 1, 1, &source, &dest3);
-  printf( "rank: %d source: %d dest %d\n",rank,source, dest3);
+  // printf( "rank: %d source: %d dest %d\n",rank,source, dest3);
   if(dest3 != MPI_PROC_NULL){
     MPI_Sendrecv(&u_local[n/sqnprocs-1],1,halo_col,dest3,30,halo_data_right, n/sqnprocs,MPI_DOUBLE,dest3,40,proc_grid,&status[rank]);
-    printf("I SENDRECIEVED %d \n",rank);
+    // printf("I SENDRECIEVED %d \n",rank);
   }
   // MPI_Barrier(proc_grid);
   MPI_Cart_shift(proc_grid, 1, -1, &source, &dest4);
   if(dest4 != MPI_PROC_NULL){
     MPI_Sendrecv(&u_local[0],1,halo_col,dest4,40,halo_data_left, n/sqnprocs,MPI_DOUBLE,dest4,30,proc_grid,&status[rank]);
-    printf("I SENDRECIEVED %d \n",rank);
+    // printf("I SENDRECIEVED %d \n",rank);
   }
   MPI_Barrier(proc_grid);
-  for (i=0;i<n/sqnprocs;i++)
-    printf("Halodata left: %d  %g\n",rank,halo_data_left[i]);
+  // for (i=0;i<n/sqnprocs;i++)
+    // printf("Halodata left: %d  %g\n",rank,halo_data_left[i]);
 
 
-
-
-  // MPI_Sendrecv(
-  //  MPI_Finalize();
   /* MPI_Sendrecv(const void *sendbuf, int sendcount, MPI_Datatype sendtype, */
   /*              int dest, int sendtag, */
   /*              void *recvbuf, int recvcount, MPI_Datatype recvtype, */
   /*              int source, int recvtag, */
   /*              MPI_Comm comm, MPI_Status *status) */
-
-  //bortkommenterat bara för att slippa hålla på med det just nu
 
   MPI_Barrier(proc_grid);
 
@@ -230,7 +225,7 @@ int main(int argc, char *argv[])
 
   begin=timer(); 
   for(int n=2; n<Nt; ++n) { 
-    /*     /\* Swap ptrs *\/ */
+    /*     /\* Swap data in arrays *\/ */
     double tmp[sizeof(u_local)];
     memcpy(tmp,u_old_local,sizeof(u_local));
     memcpy(u_old_local,u_local,sizeof(u_local));
@@ -239,7 +234,6 @@ int main(int argc, char *argv[])
     // u_old_local = u_local; 
     //u_local = u_new_local; 
     //u_new_local = tmp; 
-
 
 
 
@@ -254,7 +248,7 @@ int main(int argc, char *argv[])
     //Do manual computation of EOL etc
 
     if(dest3!= MPI_PROC_NULL){
-      printf("%d in dest3 not null \n", rank);
+      // printf("%d in dest3 not null \n", rank);
       //räkna med halopunkter till höger (obs ej hörnpunkt)
 
       for(int i = 1; i < (n/sqnprocs-1); ++i) { 
@@ -266,7 +260,7 @@ int main(int argc, char *argv[])
     }
 
     if(dest1!= MPI_PROC_NULL){
-      printf("%d in dest1 not null \n", rank);
+      //     printf("%d in dest1 not null \n", rank);
       //räkna med halopunkter nedåt  (obs ej hörnpunkt)
 
       for(int j = 1; j < (n/sqnprocs-1); ++j) { 
@@ -281,7 +275,7 @@ int main(int argc, char *argv[])
 
     if(dest2!= MPI_PROC_NULL){
       //räkna med halopunkter uppåt (obs ej hörnpunkt)
-      printf("%d in dest2 not null \n", rank);
+      // printf("%d in dest2 not null \n", rank);
       for(int j = 1; j < (n/sqnprocs-1); ++j) { 
 
         u_new_local[j] = 2*u_local[j]-u_old_local[j]+lambda_sq* 
@@ -292,7 +286,7 @@ int main(int argc, char *argv[])
 
 
     if(dest4!= MPI_PROC_NULL){
-      printf("%d in dest4 not null \n", rank);
+      // printf("%d in dest4 not null \n", rank);
       //räkna med halopunkter åt vänster (obs ej hörnpunkt)
 
       for(int i = 1; i < (n/sqnprocs-1); ++i) { 
