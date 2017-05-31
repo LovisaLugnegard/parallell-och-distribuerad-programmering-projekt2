@@ -1,0 +1,776 @@
+
+GOT HERE rank: 0 
+
+GOT HERE rank: 0 
+
+GOT HERE rank: 1 
+
+GOT HERE rank: 1 
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+rank: 1 source: -2 dest 3
+
+GOT HERE rank: 2 
+
+GOT HERE rank: 2 
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+rank: 2 source: 0 dest -2
+
+GOT HERE rank: 3 
+
+GOT HERE rank: 3 
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 3 source: 1 dest -2
+rank: 0 source: -2 dest 2
+Time elapsed: 0.000781059 s
+Maximum error: 0.000478948
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00144196 s
+Maximum error: 0.000838734
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00203514 s
+Maximum error: 0.00101906
+rank: 0 source: -2 dest 2
+Time elapsed: 0.0026381 s
+Maximum error: 0.00104243
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00325298 s
+Maximum error: 0.00104243
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00384998 s
+Maximum error: 0.0011151
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00445008 s
+Maximum error: 0.0011151
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00510693 s
+Maximum error: 0.00113549
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00571012 s
+Maximum error: 0.00113698
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00630593 s
+Maximum error: 0.00113968
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00689793 s
+Maximum error: 0.00118065
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00749707 s
+Maximum error: 0.00118065
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00809813 s
+Maximum error: 0.00121031
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00870204 s
+Maximum error: 0.00121031
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00932097 s
+Maximum error: 0.00123039
+rank: 0 source: -2 dest 2
+Time elapsed: 0.00991297 s
+Maximum error: 0.00123039
+rank: 0 source: -2 dest 2
+Time elapsed: 0.01051 s
+Maximum error: 0.00124306
+rank: 0 source: -2 dest 2
+Time elapsed: 0.011111 s
+Maximum error: 0.00124306
+rank: 0 source: -2 dest 2
+Time elapsed: 0.011714 s
+Maximum error: 0.00124915
+rank: 0 source: -2 dest 2
+Time elapsed: 0.0123131 s
+Maximum error: 0.00124915
+rank: 0 source: -2 dest 2
+Time elapsed: 0.0129001 s
+Maximum error: 0.00124915
+rank: 0 source: -2 dest 2
+Time elapsed: 0.0134981 s
+Maximum error: 0.00126036
+rank: 0 source: -2 dest 2
+Time elapsed: 0.014091 s
+Maximum error: 0.00126036
+rank: 0 source: -2 dest 2
+Time elapsed: 0.014693 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0152931 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.016031 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0166969 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0173471 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.018008 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0186701 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0193491 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 2 source: 0 dest -2
+rank: 1 source: -2 dest 3
+Time elapsed: 0.0200109 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.020695 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0213602 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.022022 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.022682 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0233321 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0239921 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.024653 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.025322 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.025974 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0266371 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.027298 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.027956 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.028621 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0293 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 2 source: 0 dest -2
+rank: 1 source: -2 dest 3
+Time elapsed: 0.0299571 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0306361 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.031297 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.031965 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0326149 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0332811 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.033942 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0346031 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0352721 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0359221 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0365829 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.037241 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0378981 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.038554 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0392401 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0399041 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0405741 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0412362 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0419021 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0425651 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.043232 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0438991 s
+Maximum error: 0.00126438
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.04456 s
+Maximum error: 0.00129325
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.045228 s
+Maximum error: 0.00132787
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0458951 s
+Maximum error: 0.00136036
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0465591 s
+Maximum error: 0.00139153
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.047226 s
+Maximum error: 0.00141683
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.047888 s
+Maximum error: 0.00144327
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.048558 s
+Maximum error: 0.00146587
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.049221 s
+Maximum error: 0.00148349
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0498841 s
+Maximum error: 0.00150335
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0505412 s
+Maximum error: 0.00151345
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.051219 s
+Maximum error: 0.0015241
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.051888 s
+Maximum error: 0.0015241
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.052546 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0532119 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.053874 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.054533 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.055196 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.055851 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0565121 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.057173 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.057837 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.058501 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.059159 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.059818 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0604761 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0611382 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0617921 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.062454 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.063112 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0637691 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.064429 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.065088 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0657511 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0664141 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0670691 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0677321 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.068393 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0690501 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.06971 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0703712 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0710371 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0717101 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0723751 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0730371 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0737071 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0743802 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0750451 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0757091 s
+Maximum error: 0.00152662
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0763772 s
+Maximum error: 0.00159585
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0770311 s
+Maximum error: 0.00162225
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.077704 s
+Maximum error: 0.00169222
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0783751 s
+Maximum error: 0.00171328
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0790381 s
+Maximum error: 0.00175859
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0797 s
+Maximum error: 0.0017787
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0803561 s
+Maximum error: 0.00179287
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0810201 s
+Maximum error: 0.00180998
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.0816901 s
+Maximum error: 0.00180998
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
+rank: 1 source: -2 dest 3
+rank: 2 source: 0 dest -2
+Time elapsed: 0.08236 s
+Maximum error: 0.0018123
+rank: 0 source: -2 dest 2
+rank: 3 source: 1 dest -2
