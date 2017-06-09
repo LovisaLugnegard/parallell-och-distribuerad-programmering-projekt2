@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
   MPI_Datatype halo_row, halo_col;
 
 
-  Nx=128; //ändrade till 8 för att kunna se vad som händer, är 128 i koden från uppgiften
+  Nx=8; //ändrade till 8 för att kunna se vad som händer, är 128 i koden från uppgiften
   if(argc>1)
     Nx=atoi(argv[1]);
   Ny=Nx;
@@ -112,35 +112,35 @@ int main(int argc, char *argv[])
  
   
   /* Setup IC */
-  //memset(u_local,0,u_size_local*sizeof(double));
+  memset(u_local,0,u_size_local*sizeof(double));
   memset(u_old_local,0,u_size_local*sizeof(double));
-  //memset(u_new_local,0,u_size_local*sizeof(double));
-
-  //stride = Nx;
-  //count = n_local_rows_base;
-  //blocklength=n_local_cols_base;
+  memset(u_new_local,0,u_size_local*sizeof(double));
 
   //printf(" rank %d  y-offset test  %d ",rank,coords[1]*Ny/nproc_row);
   //printf(" rank %d  x-offset test  %d ",rank,coords[0]*Nx/nproc_col);
-    for(int i = 1; i < (n_local_rows-1); ++i) {
-      for(int j = 1; j < (n_local_columns-1); ++j) {
-        double x = (j+coords[0]*Nx/nproc_col)*dx;
-        double y = (i+coords[1]*Ny/nproc_row)*dx;
+ 
+  /*Här måste det ändras så att varje element initieras med rätt x och y /A 8/6*/
+  for(int i = 1; i < (n_local_rows-1); ++i) {
+    for(int j = 1; j < (n_local_columns-1); ++j) {
+      double x = (j+coords[0]*Nx/nproc_col)*dx;//bör ge rätt offset
+      double y = (i+coords[1]*Ny/nproc_row)*dx;//bör ge rätt offset men blir bara noll
 
-        /* u0 */
-        u_local[i*n_local_columns+j] = initialize(x,y,0);
-
-        /* u1 */
-        u_new_local[i*n_local_columns+j] = initialize(x,y,dt);
-      }
+      /* u0 */
+      u_local[i*n_local_columns+j] = initialize(x,y,0);
+      printf("i=%d\n",i);
+      /* u1 */
+      u_new_local[i*n_local_columns+j] = initialize(x,y,dt);
+      printf("x= %g  y= ‰g u_new= %g",x ,y , initialize(x,y,dt));         
+      printf("\n");
     }
-
-    /* for(int i=0;i<u_size_local;i++)
+  }
+  //printf(" %g \n",initialize(2*dx,3*dx,dt));
+  /* for(int i=0;i<u_size_local;i++)
       printf(" %g ",u_new_local[i]);
       printf("\n");*/
 
 #ifdef WRITE_TO_FILE
-    save_solution(u_new,n_local_rows,n_local_columns,1);
+    save_solution(u_new_local,n_local_rows,n_local_columns,1);
 #endif
 
     /*
@@ -157,7 +157,6 @@ int main(int argc, char *argv[])
     MPI_Type_commit(&strided_ex_col);
     MPI_Type_commit(&strided_ex_row_col);
     
-    //distribute all grid partitions 
     //Ändrade till j+i*nproc_col, blir rätt med distributionen då (dvs det funkar med olika många processer i x och y-led /L 31/5
     for(i=0; i<nproc_row; i++) {//process rows 
       for(j=0; j<nproc_col; j++){//process columns
@@ -225,6 +224,9 @@ int main(int argc, char *argv[])
   double halo_data_right[n_local_rows];
   //  printf("\n Local rows: %d\n", n_local_rows);
 
+
+  /*Har ändrat alla dests överallt, nägot hade ändrats så att de inte längre hade rätt riktning/A 8/6*/
+
   MPI_Cart_shift(proc_grid, 0, 1, &source, &dest1);
   if(dest1 != MPI_PROC_NULL){
     // printf("Dest 1 not null for %d sending to %d\n",rank,dest1);
@@ -276,7 +278,7 @@ int main(int argc, char *argv[])
       } 
     }
     
-    //Do manual computation of EOL etc
+    /* Do manual computation of edges and corners */
     if(dest1!= MPI_PROC_NULL){
       //if(dest3!= MPI_PROC_NULL){ 
      //räkna med halopunkter till höger (obs ej hörnpunkt)
@@ -381,7 +383,7 @@ int main(int argc, char *argv[])
      MPI_Reduce(&max_error[0],&err_array[n],1,MPI_DOUBLE,MPI_MAX,0,proc_grid);
 #endif
 
-    /* skicka halopunkter */
+    /* send halopoints */
     
     MPI_Cart_shift(proc_grid, 0, 1, &source, &dest1);
     if(dest1 != MPI_PROC_NULL){
