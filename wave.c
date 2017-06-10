@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
   u_old_local = malloc(2*(u_size_local)*sizeof(double));
   u_new_local = malloc(2*(u_size_local)*sizeof(double));
 
-  printf("\nrank %d nproc_row: %d nproc_col: %d n_local_rows: %d n_local_cols: %d\n",rank, nproc_row, nproc_col, n_local_rows, n_local_columns);
+  printf("\nrank %d nproc_row: %d nproc_col: %d n_local_rows: %d n_local_cols: %d row_rank: %d col_rank: %d\n",rank, nproc_row, nproc_col, n_local_rows, n_local_columns, row_rank, col_rank);
  
   
   /* Setup IC */
@@ -120,8 +120,8 @@ int main(int argc, char *argv[])
   //printf(" rank %d  x-offset test  %d ",rank,coords[0]*Nx/nproc_col);
  
   /*Här måste det ändras så att varje element initieras med rätt x och y /A 8/6*/
-  for(int i = 1; i < (n_local_rows-1); ++i) {
-    for(int j = 1; j < (n_local_columns-1); ++j) {
+  for(int i = 1; i < (n_local_rows); ++i) {
+    for(int j = 1; j < (n_local_columns); ++j) {
       double x = (j+coords[0]*Nx/nproc_col)*dx;//bör ge rätt offset
       double y = (i+coords[1]*Ny/nproc_row)*dx;//bör ge rätt offset men blir bara noll
 
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
       printf("i=%d\n",i);
       /* u1 */
       u_new_local[i*n_local_columns+j] = initialize(x,y,dt);
-      printf("x= %g  y= ‰g u_new= %g",x ,y , initialize(x,y,dt));         
+      printf("rank %d x= %g  y= %g u_new= %g",rank, x ,y , initialize(x,y,dt));         
       printf("\n");
     }
   }
