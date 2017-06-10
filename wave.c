@@ -109,7 +109,8 @@ int main(int argc, char *argv[])
   }
   /*Här slutar försöket /L 31/5 */ 
 
-  printf("\nrank %d nproc_row: %d nproc_col: %d n_local_rows: %d n_local_cols: %d\n",rank, nproc_row, nproc_col, n_local_rows, n_local_columns);
+  printf("\nrank %d nproc_row: %d nproc_col: %d n_local_rows: %d n_local_cols: %d row_rank: %d col_rank: %d\n",rank, nproc_row, nproc_col, n_local_rows, n_local_columns, coords[0], coords[1]);
+  
   /* Setup IC */
   memset(u_local,0,u_size_local*sizeof(double));
   memset(u_old_local,0,u_size_local*sizeof(double));
