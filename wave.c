@@ -11,7 +11,7 @@
 #include <mpi.h>
 
 //#define WRITE_TO_FILE 
-#define VERIFY 
+//#define VERIFY 
 
 double timer();
 double initialize(double x, double y, double t);
@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
   MPI_Init(&argc,&argv);
 
   int Nx,Ny,Nt,n_local_rows,n_local_columns,i,u_size_local;//,blocklength,stride,count;
-  //int n_local_rows_base,n_local_cols_base;
   double dt, dx, lambda_sq;
   double *u_local, *u_old_local, *u_new_local;
   double begin,end;
@@ -32,11 +31,11 @@ int main(int argc, char *argv[])
   MPI_Datatype halo_row, halo_col;
 
 
-  Nx=128; //ändrade till 8 för att kunna se vad som händer, är 128 i koden från uppgiften
+  Nx=128;
   if(argc>1)
     Nx=atoi(argv[1]);
   Ny=Nx;
-  Nt=3;
+  Nt=128;
   dx=1.0/(Nx-1);
   dt=0.50*dx;
   lambda_sq = (dt/dx)*(dt/dx);
@@ -60,8 +59,7 @@ int main(int argc, char *argv[])
   cyclic[0] = 0;
   cyclic[1] = 0;
 
-  /*OBS!!! coords[0] = col_rank, coords[1] = row_rank*/
-
+  
   MPI_Dims_create(nprocs,n_dims,dims);  
   MPI_Cart_create(MPI_COMM_WORLD,n_dims,dims,cyclic,reorder,&proc_grid);
   MPI_Comm_rank(proc_grid,&rank);
@@ -73,33 +71,30 @@ int main(int argc, char *argv[])
   MPI_Comm_size(proc_row,&nproc_row);
   MPI_Comm_size(proc_col,&nproc_col);
   MPI_Status status[nprocs];
-  //MPI_Datatype strided,strided_ex_col,strided_ex_row,strided_ex_row_col;
-
-
-
+  
+  if(rank ==0)
+    printf("For Nx = Ny = %d and Nt = %d, nprocs = %d\n",Nx,Nt,nprocs);
   n_local_rows = Ny/nproc_row;
   n_local_columns = Nx/nproc_col;
-  //n_local_rows_base =Ny/nproc_row;
-  //n_local_cols_base= Nx/nproc_col;
-  printf("\n n_local_rows: %d n_local_cols: %d ", n_local_rows, n_local_columns);
+  
   rem_row = 0;
   rem_col = 0;
 
   /* Implementing if Nx is not divisible with nproc_col*/ 
   if(nproc_col*n_local_columns != Ny){
     rem_col = Ny % nproc_col;
-    printf("\n %d in first if rem=%d\n", rank,rem_col);
+    //printf("\n %d in first if rem=%d\n", rank,rem_col);
     for(i=0; i<rem_col; i++){
       if(col_rank == i){
         n_local_columns = n_local_columns+1;
-        printf("\n %d  in if 1.2, i=%d\n", rank,i);
+        //  printf("\n %d  in if 1.2, i=%d\n", rank,i);
       }
     }
   }
 
   if(nproc_row*n_local_rows != Nx){
     rem_row = Nx % nproc_row;
-    printf("\n %d in second if, rem = %d\n", rank, rem_row);
+    //printf("\n %d in second if, rem = %d\n", rank, rem_row);
     for(i=0; i<rem_row; i++){
       if(row_rank == i){
         n_local_rows = n_local_rows+1;
@@ -112,7 +107,7 @@ int main(int argc, char *argv[])
   u_old_local = malloc(2*(u_size_local)*sizeof(double));
   u_new_local = malloc(2*(u_size_local)*sizeof(double));
 
-  printf("\nrank %d nproc_row: %d nproc_col: %d n_local_rows: %d n_local_cols: %d coords[0]: %d coords[1]: %d, row_rank: %d, col_rank: %d\n",rank, nproc_row, nproc_col, n_local_rows, n_local_columns, coords[0], coords[1], row_rank, col_rank);
+  //printf("\nrank %d nproc_row: %d nproc_col: %d n_local_rows: %d n_local_cols: %d coords[0]: %d coords[1]: %d, row_rank: %d, col_rank: %d\n",rank, nproc_row, nproc_col, n_local_rows, n_local_columns, coords[0], coords[1], row_rank, col_rank);
  
   
   /* Setup IC */
@@ -146,23 +141,15 @@ int main(int argc, char *argv[])
 
   MPI_Barrier(MPI_COMM_WORLD);
 
-  printf("\n rem_col = %d rem_row = %d ", rem_col, rem_row); 
-  /*Här måste det ändras så att varje element initieras med rätt x och y /A 8/6*/
-  /* x=kolonner, y = rader /Lovisa 10/6 */
-  /* i=rader, j= kolonner /Lovisa 10/6 */ 
+  
   double x,y;
   for(int i = start_i; i < end_i; ++i) {
     for(int j = start_j; j < end_j; ++j) {
-      /* double x;// = (j+coords[0]*n_local_columns)*dx;//bör ge rätt offset */
-      /* double y;// = (i+coords[1]*n_local_rows)*dx;//bör ge rätt offset men blir bara noll */
-
 
       if (rem_col == 0) {
-        x = (j+col_rank*n_local_columns)*dx;//bör ge rätt offset
-        //   x = ((j-1) + local_Nx * x_coord) * dx;
+        x = (j+col_rank*n_local_columns)*dx;
       }
       else if(col_rank<rem_col) {
-        // printf("\n rank %d in col else, i = %d, j =%d ", rank, i, j);
         x = (j + (Nx - (nproc_col - col_rank) * (Nx/nproc_col) - rem_col+col_rank)) * dx;
       }
       else {
@@ -192,11 +179,6 @@ int main(int argc, char *argv[])
       /* printf("\n"); */
     }
   }
-  //printf(" %g \n",initialize(2*dx,3*dx,dt));
-  printf("\n rank %d ", rank);  
-/* for(int i=0;i<u_size_local;i++) */
-/*      printf(" %g ",u_new_local[i]); */
-/*   printf("\n"); */
 
 #ifdef WRITE_TO_FILE
   save_solution(u_new_local,n_local_rows,n_local_columns,1);
@@ -221,22 +203,15 @@ int main(int argc, char *argv[])
   double halo_data_lower[n_local_columns];
   double halo_data_left[n_local_rows];
   double halo_data_right[n_local_rows];
-  //  printf("\n Local rows: %d\n", n_local_rows);
-
-
-  /*Har ändrat alla dests överallt, nägot hade ändrats så att de inte längre hade rätt riktning/A 8/6*/
-
+  
   MPI_Cart_shift(proc_grid, 0, 1, &source, &dest1);
   if(dest1 != MPI_PROC_NULL){
-     printf("Dest 1 not null for %d sending to %d\n",rank,dest1);
-    MPI_Sendrecv(&u_new_local[n_local_columns-1],1,halo_col,dest1,10,halo_data_right, n_local_rows,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]);
-    // MPI_Sendrecv(&u_local[Nx*Ny/nprocs - Nx/nproc_col],1,halo_row,dest1,10,halo_data_lower, Nx/nproc_col,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]);  
+    // printf("Dest 1 not null for %d sending to %d\n",rank,dest1);
+    MPI_Sendrecv(&u_new_local[n_local_columns-1],1,halo_col,dest1,10,halo_data_right, n_local_rows,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]); 
   }
 
   MPI_Cart_shift(proc_grid, 0, -1, &source, &dest2);
   if(dest2 != MPI_PROC_NULL){
-    //  printf("Dest 2 not null for %d, sending to %d \n",rank,dest2);   
-    // MPI_Sendrecv(&u_local[0],1,halo_row,dest2,20,halo_data_upper, Nx/nproc_col,MPI_DOUBLE,dest2,10,proc_grid,&status[rank]);
     MPI_Sendrecv(&u_new_local[0],1,halo_col,dest2,20,halo_data_left, n_local_rows,MPI_DOUBLE,dest2,10,proc_grid,&status[rank]);  
   }
 
@@ -244,46 +219,16 @@ int main(int argc, char *argv[])
   if(dest3 != MPI_PROC_NULL){
     //  printf("Dest 3 not null for %d, sending to %d \n",rank,dest3);   
        MPI_Sendrecv(&u_new_local[u_size_local-n_local_columns],1,halo_row,dest3,30,halo_data_lower, n_local_columns,MPI_DOUBLE,dest3,40,proc_grid,&status[rank]); 
-    //MPI_Sendrecv(&u_local[Nx/nproc_col-1],1,halo_col,dest3,30,halo_data_right, Ny/nproc_row,MPI_DOUBLE,dest3,40,proc_grid,&status[rank]);
   }
  
   MPI_Cart_shift(proc_grid, 1, -1, &source, &dest4);
   if(dest4 != MPI_PROC_NULL){
     //    printf("Dest 4 not null for %d, sending to %d \n",rank,dest4);    
         MPI_Sendrecv(&u_new_local[0],1,halo_row,dest4,40,halo_data_upper, n_local_columns,MPI_DOUBLE,dest4,30,proc_grid,&status[rank]);    
-    //MPI_Sendrecv(&u_local[0],1,halo_col,dest4,40,halo_data_left, Ny/nproc_row,MPI_DOUBLE,dest4,30,proc_grid,&status[rank]);  
   }
   MPI_Barrier(proc_grid);
   
- /*  printf("\n rank %d halo data lower ", rank); */
- /*  for(i=0;i<n_local_columns;i++){ */
- /*    printf("%g ", halo_data_lower[i]); */
- /*  } */
- /*  printf("\n"); */
-
-
-
- /*  printf("\n rank %d halo data upper ", rank); */
- /*  for(i=0;i<n_local_columns;i++){ */
- /*    printf("%g ", halo_data_upper[i]); */
- /*  } */
- /*  printf("\n"); */
-
-
- /* printf("\n rank %d halo data left ", rank); */
- /*  for(i=0;i<n_local_rows;i++){ */
- /*    printf("%g ", halo_data_left[i]); */
- /*  } */
- /*  printf("\n"); */
-
-
-
- /*  printf("\n rank %d halo data right ", rank); */
- /*  for(i=0;i<n_local_rows;i++){ */
- /*    printf("%g ", halo_data_right[i]); */
- /*  } */
- /*  printf("\n"); */
-
+ 
   
   /* /\* Integrate *\/ */
   begin=timer(); 
@@ -365,7 +310,6 @@ int main(int argc, char *argv[])
 
     //hör uppe till höger
     if(dest4!= MPI_PROC_NULL && dest1!= MPI_PROC_NULL){   
-      // if(dest2!= MPI_PROC_NULL && dest3!= MPI_PROC_NULL){
       u_new_local[n_local_columns-1] = 2*u_local[n_local_columns-1]-u_old_local[n_local_columns-1]+lambda_sq* 
         (halo_data_upper[n_local_columns-1] + u_local[2*n_local_columns-1] +  halo_data_right[0]  + u_local[n_local_columns-2] - 4*u_local[n_local_columns-1]); 
     }
@@ -374,7 +318,6 @@ int main(int argc, char *argv[])
     }
 
     //hörn uppe till vänster
-    // if(dest2!=MPI_PROC_NULL && dest4!= MPI_PROC_NULL){   
     if(dest2!=MPI_PROC_NULL && dest4!= MPI_PROC_NULL){
       u_new_local[0] = 2*u_local[0]-u_old_local[0]+lambda_sq* 
         (halo_data_upper[0] + u_local[n_local_columns] +  u_local[1]  + halo_data_left[0] -4*u_local[0]); 
@@ -420,12 +363,6 @@ int main(int argc, char *argv[])
       } 
     }
 
-
-   
-    /* if(rank == 0){
-       for(i=0;i<u_size_local;i++)
-       printf(" %g ", u_local[i]);        
-       }*/
 #ifdef WRITE_TO_FILE 
     save_solution(u_local,n_local_rows,n_local_columns,n); 
 #endif 
@@ -437,61 +374,34 @@ int main(int argc, char *argv[])
 
 
       if (rem_col == 0) {
-        x = (j+col_rank*n_local_columns)*dx;//bör ge rätt offset
-        //   x = ((j-1) + local_Nx * x_coord) * dx;
+        x = (j+col_rank*n_local_columns)*dx;
       }
       else if(col_rank<rem_col) {
-        // printf("\n rank %d in col else, i = %d, j =%d ", rank, i, j);
         x = (j + (Nx - (nproc_col - col_rank) * (Nx/nproc_col) - rem_col+col_rank)) * dx;
       }
       else {
-        // printf("\n rank %d in col else, i = %d, j =%d ", rank, i, j);
         x = (j + (Nx - (nproc_col - col_rank) * (Nx/nproc_col))) * dx;
       }
             
       if (rem_row == 0) {
-        y = (i+row_rank*n_local_rows)*dx;//bör ge rätt offset men blir bara noll
-        // y = ((i-1) + local_Ny * y_coord) * dx;
+        y = (i+row_rank*n_local_rows)*dx;
       } 
       else if(row_rank < rem_row) {
-        // printf("\n rank %d in row else, i = %d, j =%d ", rank, i, j);
         y = (i + (Ny - (nproc_row - row_rank) * (Ny/nproc_row) -rem_row+row_rank)) * dx;
       }
       else {
-        // printf("\n rank %d in row else, i = %d, j =%d ", rank, i, j);
         y = (i + (Ny - (nproc_row - row_rank) * Ny/nproc_row)) * dx;
       }
 
-
-
-      /* if (rem_col == 0) { */
-      /*   x = (j+col_rank*n_local_columns)*dx;//bör ge rätt offset */
-      /*   //   x = ((j-1) + local_Nx * x_coord) * dx; */
-      /* } else { */
-      /*   // printf("\n rank %d in col else, i = %d, j =%d ", rank, i, j); */
-      /*   x = (j + (Nx - (nproc_col - col_rank) * n_local_columns)) * dx; */
-      /* } */
-            
-      /* if (rem_row == 0) { */
-      /*   y = (i+row_rank*n_local_rows)*dx;//bör ge rätt offset men blir bara noll */
-      /*   // y = ((i-1) + local_Ny * y_coord) * dx; */
-      /* } else { */
-      /*   // printf("\n rank %d in row else, i = %d, j =%d ", rank, i, j); */
-      /*   y = (i + (Ny - (nproc_row - row_rank) * n_local_rows)) * dx; */
-      /* } */
-
-
-        double e = fabs(u_new_local[i*n_local_columns+j]-initialize(x,y,n*dt)); 
-        if(e>error) 
-          error = e; 
+      double e = fabs(u_new_local[i*n_local_columns+j]-initialize(x,y,n*dt)); 
+      if(e>error) 
+        error = e; 
       } 
     } 
     if(error > max_error[0]) 
       max_error[0]=error;  
-    // printf("Maximum error: %g\n",err_array[n]); 
-    //      printf("Maximum error: %g\n",max_error[0]); 
 #endif 
-    // }
+    
 
 #ifdef VERIFY
     MPI_Reduce(&max_error[0],&err_array[n],1,MPI_DOUBLE,MPI_MAX,0,proc_grid);
@@ -500,27 +410,23 @@ int main(int argc, char *argv[])
     /* send halopoints */
     
     MPI_Cart_shift(proc_grid, 0, 1, &source, &dest1);
-    if(dest1 != MPI_PROC_NULL){
-      //MPI_Sendrecv(&u_new_local[u_size_local - n_local_columns],1,halo_row,dest1,10,halo_data_lower, n_local_columns,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]);     
+    if(dest1 != MPI_PROC_NULL){     
       MPI_Sendrecv(&u_new_local[n_local_columns-1],1,halo_col,dest1,10,halo_data_right, n_local_rows,MPI_DOUBLE,dest1,20,proc_grid,&status[rank]);
     }
 
     MPI_Cart_shift(proc_grid, 0, -1, &source, &dest2);    
     if(dest2 != MPI_PROC_NULL){
-      //MPI_Sendrecv(&u_new_local[0],1,halo_row,dest2,20,halo_data_upper, n_local_columns,MPI_DOUBLE,dest2,10,proc_grid,&status[rank]);
       MPI_Sendrecv(&u_new_local[0],1,halo_col,dest2,20,halo_data_left, n_local_rows,MPI_DOUBLE,dest2,10,proc_grid,&status[rank]);
     }
 
     MPI_Cart_shift(proc_grid, 1, 1, &source, &dest3);
     if(dest3 != MPI_PROC_NULL){   
-      //MPI_Sendrecv(&u_new_local[n_local_columns-1],1,halo_col,dest3,30,halo_data_right, n_local_rows,MPI_DOUBLE,dest3,40,proc_grid,&status[rank]);    
       MPI_Sendrecv(&u_new_local[u_size_local-n_local_columns],1,halo_row,dest3,30,halo_data_lower, n_local_columns,MPI_DOUBLE,dest3,40,proc_grid,&status[rank]);
     }
  
 
     MPI_Cart_shift(proc_grid, 1, -1, &source, &dest4);   
     if(dest4 != MPI_PROC_NULL){
-      //      MPI_Sendrecv(&u_new_local[0],1,halo_col,dest4,40,halo_data_left, n_local_rows,MPI_DOUBLE,dest4,30,proc_grid,&status[rank]);
       MPI_Sendrecv(&u_new_local[0],1,halo_row,dest4,40,halo_data_upper, n_local_columns,MPI_DOUBLE,dest4,30,proc_grid,&status[rank]);
     }
     
@@ -545,8 +451,8 @@ int main(int argc, char *argv[])
 #ifdef VERIFY
   if(rank==0){
     for(int i=0;i<Nt;i++)
-      printf("Maximum error: %g\n",err_array[i]);
-  }
+      printf("%g\n",err_array[i]);
+     }
   free(err_array);
 #endif
 
